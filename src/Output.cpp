@@ -1,11 +1,3 @@
-//
-//  Output.cpp
-//  HDF
-//
-//  Created by Marten Seemann on 04.10.11.
-//  Copyright (c) 2011 ---. All rights reserved.
-//
-
 #include "Output.h"
 
 using namespace std;

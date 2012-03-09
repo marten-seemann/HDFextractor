@@ -1,18 +1,8 @@
-//
-//  Controller.cpp
-//  HDF
-//
-//  Created by Marten Seemann on 10.10.11.
-//  Copyright (c) 2011 ---. All rights reserved.
-//
-
 #include "Controller.h"
 
 using namespace std;
 using namespace boost::filesystem;
 namespace po = boost::program_options;
-
-// ToDo: write .log file with input options, evtl. config kopieren
 
 
 // constructor for showing infos about the HDF file
@@ -47,6 +37,11 @@ Controller::Controller(int argc, const char * argv[]) {
   // non-valid command line options (or help) => show usage
   if (vm.size()==0 || vm.count("help") || (vm.count("show-info") && !vm.count("hdf"))) {
     cout << cmdline_options << "\n";
+    exit(1);
+  }
+  
+  if(vm.count("version")) {
+    cout << "HDFextractor, version 0.0.6" << endl;
     exit(1);
   }
     
@@ -130,7 +125,7 @@ void Controller::createOutputDirs() {
     cerr << "Output file " << output_dirname << " exists, but is not a directory." << endl;
     abort();
   }
-  else if(!exists(output_dirname)) {
+  else if(!exists(f_dirname)) {
     if(!create_directory(output_dirname)) {
       cerr << "Could not create output directory " << output_dirname << endl;
       abort();
@@ -276,7 +271,7 @@ void Controller::doRun2() {
   //ToDo: implement error if no valid mode is supplied
 
     
-  string filename=streak_dirname+"/output_new.txt";
+  string filename=streak_dirname+"/streak.txt";
   Output out(filename);
   for(int i=0;i<row.size();i++) {
     out << i;
@@ -284,7 +279,6 @@ void Controller::doRun2() {
     out << row.at(i);
     out << "\n";
   }
-  plotRow(filename);
   
   return;
 };
@@ -331,18 +325,6 @@ void Controller::plotSlice(const string datafile, const int number) const {
 };
 
 
-void Controller::plotRow(const string datafile) const {
-  cout << "Opening plot..." << endl;
-  Gnuplot::set_terminal_std("x11");
-  Gnuplot g1("lines");
-  //g1.cmd("set terminal png size 1500,1500 24");
-  g1.cmd("set xlabel '"+direction+"'");
-  g1.cmd("set ylabel 'I'");
-  g1.cmd("set border 3");
-  g1.cmd("set tics nomirror");
-  g1.cmd("plot '"+datafile+"' u 1:2 w l");
-  g1.showonscreen();
-};
 
 string Controller::getLogFileName(const string prefix, const string ending) const {
   time_t rawtime;

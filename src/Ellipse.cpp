@@ -1,12 +1,4 @@
-//
-//  Circle.cpp
-//  HDF
-//
-//  Created by Marten Seemann on 13.09.11.
-//  Copyright (c) 2011 ---. All rights reserved.
-//
-
-#include "Circle.h"
+#include "Ellipse.h"
 
 using namespace std;
 
@@ -27,16 +19,6 @@ short Ellipse::liesInside(const double x, const double y) const {
   else return 1;
 };
 
-/*
- double Circle::getAntiDerivativeValue(const double var, const double y1) const {
-  double value;
-  //cout << "Argument atan: " << var/sqrt(radius*radius-var*var) << endl;
-  //cout << "atan: " << atan(var/sqrt(radius*radius-var*var)) << endl;
-
-  value=0.5*(var*sqrt(radius*radius-var*var)+ radius*radius*atan(var/sqrt(radius*radius-var*var)))-y1*var;
-  return value;
-};
- */
 
 double Ellipse::getAntiDerivativeValue(const double var, const double y1) const {
   double value;
@@ -74,7 +56,6 @@ double Ellipse::getArea(const double start_x, const double width_x, const double
   // we have a rectangle which partly lies inside and partly lies outside the circle
   
   if(y1*y2<0) {
-    //cout << "Splitting..." << endl;
     area=getArea(start_x,width_x,0,-y1)+getArea(start_x, width_x, 0, y2);
     return area;
   }
@@ -88,7 +69,6 @@ double Ellipse::getArea(const double start_x, const double width_x, const double
   //cout << "Bound1: " << bound1 << endl;
   //cout << "Bound2: " << bound2 << endl;
   area=getAntiDerivativeValue(bound2, y1)-getAntiDerivativeValue(bound1, y1);
-  //cout << "Bis ganz oben: " << area << endl;
   area-=getArea(x+x1, width_x, y+y1+width_y,2*site_a*site_b);
   return area;
 };

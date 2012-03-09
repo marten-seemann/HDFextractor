@@ -5,13 +5,15 @@ SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeScripts)
 include(CheckIncludeFile)
 
 set(BUILD_SHARED_LIBRARIES OFF)
+set(CMAKE_BUILD_TYPE "RELEASE")
+
 
 #add_subdirectory(${PROJECT_SOURCE_DIR}/extern/hdf5/hdf5-1.8.8)
 
-if(CMAKE_COMPILER_IS_GNUCXX)
-	list(APPEND CMAKE_CXX_FLAGS "-O2 -Wall") ## Optimize
+#if(CMAKE_COMPILER_IS_GNUCXX)
+#	list(APPEND CMAKE_CXX_FLAGS "-O2") ## Optimize
 #	list(APPEND CMAKE_EXE_LINKER_FLAGS -s)	 ## Strip binary
-endif()
+#endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	set(OS mac)

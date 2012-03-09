@@ -1,11 +1,3 @@
-//
-//  functions.h
-//  HDF
-//
-//  Created by Marten Seemann on 08.09.11.
-//  Copyright 2011 ---. All rights reserved.
-//
-
 #ifndef HDF_functions_h
 #define HDF_functions_h
 
@@ -18,8 +10,14 @@
 typedef std::vector<long> layerdata_row;
 typedef std::vector<layerdata_row> layerdata;
 
+/// remove whitespace from the beginning of a string
+/// @param str the string to be trimmed
+/// @return the trimmed string
 std::string& trim(std::string &str);
-std::string intToString(const int a);
+/// convert an int to a std::string
+/// @param integer the int that should be converted
+/// @result a string consisting of the value of the integer
+std::string intToString(const int integer);
 
 template <class T> std::string to_string (const T& t);
 

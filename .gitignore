@@ -1,0 +1,12 @@
+CMakeScripts
+CMakeFiles
+*.xcodeproj
+cmake_install.cmake
+CMakeCache.txt
+DerivedData
+Makefile
+HDFextractor
+HDFextractor.build
+*.hdf
+doxydoc
+install_manifest.txt

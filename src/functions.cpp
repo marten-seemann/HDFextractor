@@ -1,11 +1,3 @@
-//
-//  functions.cpp
-//  HDF
-//
-//  Created by Marten Seemann on 08.09.11.
-//  Copyright 2011 ---. All rights reserved.
-//
-
 #include "functions.h"
 
 using namespace std;
@@ -26,8 +18,8 @@ string& trim(string &str)
   return str;
 };
 
-string intToString(const int a) {
+string intToString(const int integer) {
   stringstream out;
-  out << a;
+  out << integer;
   return out.str();
 };

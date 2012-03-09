@@ -1,11 +1,3 @@
-//
-//  Config.cpp
-//  HDF
-//
-//  Created by Marten Seemann on 05.10.11.
-//  Copyright (c) 2011 ---. All rights reserved.
-//
-
 #define DEBUGMESSAGES 0
 
 #include "Config.h"
