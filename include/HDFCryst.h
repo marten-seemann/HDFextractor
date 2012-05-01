@@ -46,7 +46,7 @@ public:
   /// @return the layer
   layerdata getLayer(const std::string dataset_name, const unsigned short orientation, const int number) const;
   layerdata_row getRow(const unsigned short orientation, const int coord1, const int coord2) const;
-  layerdata_row getZylinderRow(const unsigned short orientation, const int coord1, const int coord2, const double site_a, const double site_b) const;
+  layerdata_row getCylinderRow(const unsigned short orientation, const int coord1, const int coord2, const double site_a, const double site_b) const;
   void saveLayer(const std::string filename, const unsigned short orientation, const int number) const;
   std::vector<int> getDimensions() const;
   /// return the UBI matrix read from the header of the HDF file
@@ -57,14 +57,14 @@ public:
   int getNP() const;
   
 private:
+  /// read the information stored in the header of the HDF file
+  void readHDFHeader();
   /// read the UBI matrix from the header of the HDF file
   void readUBI();
   /// @copybrief getNP()
   void readNP();
   /// read the dimensions of the reciprocal space encoded in the HDF file
   void readDimensions();
-  
-  
 };
 
 #endif

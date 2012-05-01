@@ -55,5 +55,4 @@ public:
   double getArea(const double start_x, const double width_x, const double start_y, const double width_y) const;
 };
 
-
 #endif

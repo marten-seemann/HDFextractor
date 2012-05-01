@@ -43,9 +43,6 @@ public:
   /// get the filename of the configuration file
   /// @return the filename, as given to the constructor
   std::string getFilename() const;
-
 };
-
-
 
 #endif

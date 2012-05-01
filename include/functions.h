@@ -28,4 +28,5 @@ inline std::string to_string (const T& t)
   ss << t;
   return ss.str();
 }
+
 #endif

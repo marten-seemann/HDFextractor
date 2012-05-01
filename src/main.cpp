@@ -9,10 +9,7 @@
 #include "functions.h"
 #include "Controller.h"
 #include "Output.h"
-
 #include <boost/program_options.hpp>
-//#include <omp.h>
-
 
 using namespace std;
 

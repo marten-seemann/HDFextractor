@@ -19,7 +19,6 @@ short Ellipse::liesInside(const double x, const double y) const {
   else return 1;
 };
 
-
 double Ellipse::getAntiDerivativeValue(const double var, const double y1) const {
   double value;
   value=0.5*(site_b*var*sqrt(1-var*var/(site_a*site_a))+site_a*site_b*asin(var/site_a))-y1*var;
@@ -28,7 +27,6 @@ double Ellipse::getAntiDerivativeValue(const double var, const double y1) const 
 
 double Ellipse::getArea(const double start_x, const double width_x, const double start_y, const double width_y) const {
   double area;
-  
   double x1=start_x-x;
   double y1=start_y-y;
   
@@ -38,15 +36,6 @@ double Ellipse::getArea(const double start_x, const double width_x, const double
   
   double x2=x1+width_x;
   double y2=y1+width_y;
-  
-  /*cout << "Site a: " << site_a << endl;
-  cout << "Site b: " << site_b << endl;
-  cout << "x1: " << x1 << endl;
-  cout << "x2: " << x2 << endl;
-  cout << "y1: " << y1 << endl;
-  cout << "y2: " << y2 << endl;
-  cout << endl;*/
-
 
   if(liesInside(x1,y1)<=0 && liesInside(x2,y1)<=0 && liesInside(x1,y2)<=0 && liesInside(x2,y2)<=0) return 0; //whole area is outside the circle
   if(liesInside(x1,y1)>=0 && liesInside(x2,y1)>=0 && liesInside(x1,y2)>=0 && liesInside(x2,y2)>=0) { //whole area is inside the circle
@@ -61,13 +50,10 @@ double Ellipse::getArea(const double start_x, const double width_x, const double
   }
   
   double nullstelle=site_a*sqrt(1-y1*y1/(site_b*site_b));
-  //cout << "Nullstelle: " << nullstelle << endl;
   double bound1=min(nullstelle,abs(x1));
   if(x1<0) bound1=-bound1;
   double bound2=min(nullstelle,abs(x2));
   if(x2<0) bound2=-bound2;
-  //cout << "Bound1: " << bound1 << endl;
-  //cout << "Bound2: " << bound2 << endl;
   area=getAntiDerivativeValue(bound2, y1)-getAntiDerivativeValue(bound1, y1);
   area-=getArea(x+x1, width_x, y+y1+width_y,2*site_a*site_b);
   return area;

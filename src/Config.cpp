@@ -38,7 +38,6 @@ void Config::readValues() {
   
 };
 
-
 string Config::getValue(const string& name) const {
   value_map::const_iterator it=values.find(name);
   if(it==values.end()) {

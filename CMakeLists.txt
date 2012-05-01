@@ -7,9 +7,6 @@ include(CheckIncludeFile)
 set(BUILD_SHARED_LIBRARIES OFF)
 set(CMAKE_BUILD_TYPE "RELEASE")
 
-
-#add_subdirectory(${PROJECT_SOURCE_DIR}/extern/hdf5/hdf5-1.8.8)
-
 #if(CMAKE_COMPILER_IS_GNUCXX)
 #	list(APPEND CMAKE_CXX_FLAGS "-O2") ## Optimize
 #	list(APPEND CMAKE_EXE_LINKER_FLAGS -s)	 ## Strip binary
@@ -32,7 +29,7 @@ include_directories(extern .)
 find_package(Boost REQUIRED COMPONENTS system program_options filesystem)
 include_directories(${Boost_INCLUDE_DIRS})
 
-find_package(Gnuplot REQUIRED)
+find_package(Gnuplot)
 
 find_package(ZLIB REQUIRED)
 include_directories(${ZLIB_INCLUDE_DIR})
@@ -47,7 +44,6 @@ message(STATUS ${ZLIB_INCLUDE_DIR})
 
 find_library(HDF5_LIBRARY1 NAMES hdf5 PATH_SUFFIXES hdf5)
 find_library(HDF5_LIBRARY2 NAMES hdf5_cpp PATH_SUFFIXES hdf5)
-#find_library(SZLIB_LIBRARIES sz)
 find_file(H5cpp H5Cpp.h PATH_SUFFIXES cpp)
 get_filename_component(HDF5_INCLUDE_DIR ${H5cpp} PATH)
 include_directories(${HDF5_INCLUDE_DIR})
@@ -57,10 +53,9 @@ message(STATUS ${ZLIB_LIBRARY})
 add_executable(HDFextractor ${HEADERS} ${CPPS})
 target_link_libraries(HDFextractor ${Boost_LIBRARIES})
 target_link_libraries(HDFextractor ${ZLIB_LIBRARY})
-#target_link_libraries(HDFextractor ${SZLIB_LIBRARIES})
 target_link_libraries(HDFextractor ${HDF5_LIBRARY1})
 target_link_libraries(HDFextractor ${HDF5_LIBRARY2})
 
-SET(CMAKE_VERBOSE_MAKEFILE ON)
+# SET(CMAKE_VERBOSE_MAKEFILE ON)
 
 install (TARGETS HDFextractor DESTINATION bin CONFIGURATIONS Release)

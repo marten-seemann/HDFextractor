@@ -4,8 +4,6 @@ using namespace std;
 using namespace boost::filesystem;
 namespace po = boost::program_options;
 
-
-// constructor for showing infos about the HDF file
 Controller::Controller(int argc, const char * argv[]) {
   po::options_description cmdline_options;
   po::options_description generic("Generic options");
@@ -47,7 +45,7 @@ Controller::Controller(int argc, const char * argv[]) {
     
   if(vm.count("show-info")) {
     openHDF(vm["hdf"].as<string>());
-    showInfos();
+    printInfos();
   }
   if(vm.count("config")) {
     string configfile=vm["config"].as<string>();
@@ -83,9 +81,8 @@ void Controller::readConfigFile(const string filename) {
 };
 
 
-
 // show infos about the HDF file, like dimensions, UBI and NP value
-void Controller::showInfos() const {
+void Controller::printInfos() const {
   // print Dimensions
   vector<int> dimensions = hdf->getDimensions();
   cout << endl;
@@ -107,7 +104,6 @@ void Controller::showInfos() const {
     cout << endl;
   }
   
-  //print NP
   cout << endl;
   cout << "NP:\t" << hdf->getNP() << endl;
 }
@@ -125,7 +121,7 @@ void Controller::createOutputDirs() {
     cerr << "Output file " << output_dirname << " exists, but is not a directory." << endl;
     abort();
   }
-  else if(!exists(f_dirname)) {
+  else if(!exists(output_dirname)) {
     if(!create_directory(output_dirname)) {
       cerr << "Could not create output directory " << output_dirname << endl;
       abort();
@@ -248,9 +244,9 @@ void Controller::doRun2() {
       }
     }
     
-    if(direction=="x") row=hdf->getZylinderRow(0, y, z, size_y, size_z);
-    else if(direction=="y") row=hdf->getZylinderRow(1, z, x, size_z, size_x);
-    else if(direction=="z") row=hdf->getZylinderRow(2, x, y, size_x, size_y);
+    if(direction=="x") row=hdf->getCylinderRow(0, y, z, size_y, size_z);
+    else if(direction=="y") row=hdf->getCylinderRow(1, z, x, size_z, size_x);
+    else if(direction=="z") row=hdf->getCylinderRow(2, x, y, size_x, size_y);
   }
   else if(config->getValue("mode")=="single") {
     int x, y, z;

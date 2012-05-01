@@ -13,8 +13,6 @@
  * 
  */
 
-
-
 class Output {
   /// true if output is directed to an output file, false if it goes to standard output
   bool filewrite; 
@@ -37,8 +35,6 @@ public:
   template <typename T>  inline void operator<<(const T& value);
 };
 
-
-
 template <typename T> 
 void Output::write(const T& value) {
   if(filewrite) {
@@ -46,7 +42,6 @@ void Output::write(const T& value) {
   }
   else std::cout << value << std::endl;
 };
-
 
 template <typename T> 
 void Output::operator<<(const T& value) {

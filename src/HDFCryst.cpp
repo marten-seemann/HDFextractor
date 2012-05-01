@@ -21,14 +21,7 @@ HDFCryst::HDFCryst(string filename) {
     exit(1); //abort();
   }
   root = file.openGroup("/");
-
-  if(DEBUGMESSAGES) cout << "File opened: " << file.getFileName() << endl;
-  readDimensions();
-  if(DEBUGMESSAGES) cout << "Reading NP." << endl;
-  readNP();
-  if(DEBUGMESSAGES) cout << "Reading UBI." << endl;
-  readUBI();
-
+  readHDFHeader();
 }
 
 HDFCryst::~HDFCryst() {
@@ -37,9 +30,15 @@ HDFCryst::~HDFCryst() {
   file.close();
 }
 
+void HDFCryst::readHDFHeader() {
+  if(DEBUGMESSAGES) cout << "File opened: " << file.getFileName() << endl;
+  readDimensions();
+  if(DEBUGMESSAGES) cout << "Reading NP." << endl;
+  readNP();
+  if(DEBUGMESSAGES) cout << "Reading UBI." << endl;
+  readUBI();
+}
 
-
-//read the UBI-Matrix from the HDF file
 void HDFCryst::readUBI() {
   Attribute att = root.openAttribute("ubi");
   DataSpace space = att.getSpace();
@@ -48,7 +47,6 @@ void HDFCryst::readUBI() {
   if(rank!=2) abort();
   double ubiarray[3][3];
   att.read(PredType::IEEE_F64LE,ubiarray);
-  
   
   //write ubiarray to std::vector ubi
   for(int i=0;i<3;i++) {
@@ -169,10 +167,8 @@ layerdata HDFCryst::getLayer(const string dataset_name,const unsigned short orie
   
   layerdata values(dims[(orientation+2)%3], layerdata_row(dims[(orientation+1)%3]));
   
-//  for(int col=0;col<dims[(orientation+1)%3];col++) {
   hsize_t offset[3] = { 0, 0, 0 };
   offset[orientation]=number;
-  //offset[(orientation+1)%3]=col;
   hsize_t  count[3] = { rdims[0], rdims[1], rdims[2] }; //4,1
   float column[prod];  // buffer for column to be read
   filespace.selectHyperslab( H5S_SELECT_SET, count, offset);
@@ -185,7 +181,6 @@ layerdata HDFCryst::getLayer(const string dataset_name,const unsigned short orie
       counter++;
     }
   }
-  // cout << prod << " x " << dims[(orientation+1)%3] << endl;
   return values;
 };
 
@@ -208,10 +203,7 @@ layerdata_row HDFCryst::getRow(const unsigned short orientation, const int coord
   filespace.selectHyperslab( H5S_SELECT_SET, count, offset);
   dataset.read( column, PredType::NATIVE_FLOAT, mspace, filespace );
   
-  //cout << "Dim: " << dims[orientation] << endl;
-  //values.resize(dims[orientation]);
   for(int i=0;i<dims[orientation];i++) {
-    //cout << i << " " << column[i] << endl;
     values.push_back(column[i]);
   }
 
@@ -221,7 +213,7 @@ layerdata_row HDFCryst::getRow(const unsigned short orientation, const int coord
   return values;
 };
 
-layerdata_row HDFCryst::getZylinderRow(const unsigned short orientation, const int coord1, const int coord2, const double site_a, const double site_b) const {
+layerdata_row HDFCryst::getCylinderRow(const unsigned short orientation, const int coord1, const int coord2, const double site_a, const double site_b) const {
   layerdata_row result;
   Ellipse circ(0,0,site_a,site_b);
   cout << "Ellipse with " << site_a << " x " << site_b << endl;
@@ -247,21 +239,12 @@ layerdata_row HDFCryst::getZylinderRow(const unsigned short orientation, const i
     }
   }
   
-  /*
-  for(int j=min_j;j<max_j;j++) {
-    for(int k=min_k;k<max_k;k++) {
-      cout << "j: " << j << ", \tk: " << k << "\t area: " << circ.getArea(j-0.5,1,k-0.5,1) << endl;
-    }
-  }
-   */
-  
   for(int i=0;i<dims[orientation];i++) {
     unsigned long sum=0;
     for(int j=0;j<columns.size();j++) {
       sum+=fields.at(j)*columns.at(j).at(i);
     }
     result.push_back(sum);
-    //cout << i << "\t" << sum << endl;
   }
   return result;
 };

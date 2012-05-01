@@ -68,7 +68,7 @@ private:
   /** prints dimension, the UBI matrix as well as the NP (number of points) value
    *  data is read from the header of the HDF file
    */
-  void showInfos() const;
+  void printInfos() const;
   /// open a HDF file
   /** calls the class %HDFCryst for opening the specified HDF file
    * @param filename the path to the HDF file
