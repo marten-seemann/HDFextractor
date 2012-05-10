@@ -39,7 +39,7 @@ Controller::Controller(int argc, const char * argv[]) {
   }
   
   if(vm.count("version")) {
-    cout << "HDFextractor, version 0.0.6" << endl;
+    cout << "HDFextractor, version 0.1.0" << endl;
     exit(1);
   }
     
@@ -136,6 +136,7 @@ void Controller::createOutputDirs() {
       cerr << "Could not create output directory " << output_dirname+"/"+direction << endl;
       abort();
     }
+    cout << "Saving into directory: " << output_dirname+"/"+direction << endl << endl;
   }
   else { // run=2: create directory for the streaks
     if(!exists(output_dirname+"/streaks")) {

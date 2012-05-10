@@ -1,5 +1,7 @@
 HDFextractor - A program for extracting data from HDF files used in X-Ray scattering
 
+Version 0.1.0
+
 Copyright (C) 2012 Marten Seemann
 
 >    This program is free software: you can redistribute it and/or modify
@@ -15,7 +17,7 @@ Copyright (C) 2012 Marten Seemann
 >    You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-    
+---
 External libraries, if used, include their own licenses:
 
 * [Boost libraries](http://www.boost.org/)
