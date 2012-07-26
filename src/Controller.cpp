@@ -182,8 +182,8 @@ void Controller::doRun1() {
   int start_slice, end_slice;
   if(config->getValue("slices_start")=="center") {
     int num=atoi(config->getValue("slices_number").c_str());
-    start_slice=floor(dimensions.at(dir_index)/2-num/2);
-    end_slice=ceil(dimensions.at(dir_index)/2+num/2);
+    start_slice=floor(static_cast<double>(dimensions.at(dir_index)/2-num/2));
+    end_slice=ceil(static_cast<double>(dimensions.at(dir_index)/2+num/2));
   }
   else {
     start_slice=max(1,atoi(config->getValue("slices_start").c_str()));
@@ -205,7 +205,7 @@ void Controller::doRun1() {
     string filename=output_dir+"/slice"+to_string(i)+".dat";
     hdf->saveLayer(filename,dir_index,i);
     if(plot) {
-      cout << "Plotting slice " << (i+1) << "..." << endl;
+	  cout << "Plotting slice " << (i+1) << "..." << endl;
       plotSlice(filename,i);
     }
   }
@@ -306,7 +306,7 @@ void Controller::plotSlice(const string datafile, const int number) const {
   }
   
   
-  Gnuplot::set_terminal_std("x11");
+  Gnuplot::set_terminal_std("png");
   Gnuplot g1("lines");
   g1.cmd("set terminal png size 1500,1500 24");
   g1.cmd("set output '"+datafile+".png'");

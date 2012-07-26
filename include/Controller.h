@@ -6,8 +6,9 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <cmath>
 #include <fstream>
-#include <unistd.h>
+//#include <unistd.h>
 #include <ctime>
 
 #include <boost/filesystem.hpp>

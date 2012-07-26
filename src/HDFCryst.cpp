@@ -162,7 +162,7 @@ layerdata HDFCryst::getLayer(const string dataset_name,const unsigned short orie
   rdims[(orientation+1)%3]=dims[(orientation+1)%3];
   rdims[(orientation+2)%3]=dims[(orientation+2)%3];
 
-  unsigned long prod=rdims[0]*rdims[1]*rdims[2];
+  const unsigned long prod=rdims[0]*rdims[1]*rdims[2];
   DataSpace mspace(3, rdims);
   
   layerdata values(dims[(orientation+2)%3], layerdata_row(dims[(orientation+1)%3]));
@@ -170,7 +170,8 @@ layerdata HDFCryst::getLayer(const string dataset_name,const unsigned short orie
   hsize_t offset[3] = { 0, 0, 0 };
   offset[orientation]=number;
   hsize_t  count[3] = { rdims[0], rdims[1], rdims[2] }; //4,1
-  float column[prod];  // buffer for column to be read
+  //float column[prod];  // buffer for column to be read
+  float* column = new float[prod];
   filespace.selectHyperslab( H5S_SELECT_SET, count, offset);
   dataset.read( column, PredType::NATIVE_FLOAT, mspace, filespace );
     
@@ -190,7 +191,7 @@ layerdata_row HDFCryst::getRow(const unsigned short orientation, const int coord
   DataSet dataset = file.openDataSet( "signal" );
   DataSpace filespace = dataset.getSpace();
   
-  float column[dims[orientation]];
+  float* column= new float[dims[orientation]];
   hsize_t rdims[3]={1,1,1};
   rdims[orientation]=dims[orientation];
   DataSpace mspace(3, rdims);
