@@ -104,9 +104,28 @@ void Controller::printInfos() const {
     }
     cout << endl;
   }
-  
   cout << endl;
-  cout << "NP:\t" << hdf->getNP() << endl;
+  
+  cout << "NP (Resolution):\t" << hdf->getNP() << endl << endl;
+  
+  // evaluate ubi
+  // vector lengthes
+  cout << "UBI dimensions: " << endl;
+  double len1 = sqrt(ubi[0][0]*ubi[0][0] + ubi[0][1]*ubi[0][1] + ubi[0][2]*ubi[0][2]);
+  double len2 = sqrt(ubi[1][0]*ubi[1][0] + ubi[1][1]*ubi[1][1] + ubi[1][2]*ubi[1][2]);
+  double len3 = sqrt(ubi[2][0]*ubi[2][0] + ubi[2][1]*ubi[2][1] + ubi[2][2]*ubi[2][2]);
+
+  cout << "Vector 1: " << len1 << endl;
+  cout << "Vector 2: " << len2 << endl;
+  cout << "Vector 3: " << len3 << endl;
+
+  // angles between the vectors
+  double angle12 = acos((ubi[0][0]*ubi[1][0] + ubi[0][1]*ubi[1][1] + ubi[0][2]*ubi[1][2])/(len1*len2))*M_1_PI*180;
+  double angle13 = acos((ubi[0][0]*ubi[2][0] + ubi[0][1]*ubi[2][1] + ubi[0][2]*ubi[2][2])/(len1*len3))*M_1_PI*180;
+  double angle23= acos((ubi[1][0]*ubi[2][0] + ubi[1][1]*ubi[2][1] + ubi[1][2]*ubi[2][2])/(len2*len3))*M_1_PI*180;
+  cout << "Angle between Vector 1 and Vector 2: " << angle12 << "°" << endl;
+  cout << "Angle between Vector 1 and Vector 3: " << angle13 << "°" << endl;
+  cout << "Angle between Vector 2 and Vector 3: " << angle23 << "°" << endl;
 }
 
 void Controller::openHDF(const string filename) {
@@ -185,6 +204,10 @@ void Controller::doRun1() {
     int num=atoi(config->getValue("slices_number").c_str());
     start_slice=floor(static_cast<double>(dimensions.at(dir_index)/2-num/2));
     end_slice=ceil(static_cast<double>(dimensions.at(dir_index)/2+num/2));
+  }
+  else if(config->getValue("slices_start")=="all") {
+    start_slice = 1;
+    end_slice = static_cast<double>(dimensions.at(dir_index));
   }
   else {
     start_slice=max(1,atoi(config->getValue("slices_start").c_str()));
