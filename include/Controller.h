@@ -14,8 +14,10 @@
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 
-
+// disable gnuplot on windows
+#if !defined (__WIN32__)
 #include "gnuplot_cpp/gnuplot_i.h"
+#endif
 
 #include "Config.h"
 #include "Output.h"

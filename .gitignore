@@ -8,5 +8,6 @@ Makefile
 HDFextractor
 HDFextractor.build
 *.hdf
+*.cfg
 doxydoc
 install_manifest.txt

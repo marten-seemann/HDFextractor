@@ -52,6 +52,7 @@ Controller::Controller(int argc, const char * argv[]) {
     cout << "Reading configuration from: " << configfile << endl;
     readConfigFile(configfile);
   }
+  exit(1); // needed to prevent a dubious "Misaligned address error"
 };
 
 
@@ -198,8 +199,14 @@ void Controller::doRun1() {
 
   
   bool plot;
+  // disable gnuplotting on windows, regardless of what the user specified in the config file
+#if defined (__WIN32__)
+ plot = false;
+#else
   if(config->getValue("plot")!="0") plot=true;
   else plot=false;
+#endif
+  
   for(int i=start_slice;i<end_slice;i++) {
     cout << "Saving slice " << (i+1) << " / " << dimensions.at(dir_index) << endl;
     string filename=output_dir+"/slice"+to_string(i)+".dat";
