@@ -23,13 +23,6 @@ find_package(ZLIB REQUIRED)
 include_directories(${ZLIB_INCLUDE_DIR})
 message(STATUS ${ZLIB_INCLUDE_DIR})
 
-#set(HDF5_ROOT ${PROJECT_SOURCE_DIR}/extern/hdf5/hdf5-1.8.8)
-#find_package(HDF5 REQUIRED PATHS ${PROJECT_SOURCE_DIR}/extern/hdf5/hdf5-1.8.8)
-#include_directories(${HDF5_INCLUDE_DIR})
-#message(STATUS ${HDF5_LIBRARIES})
-#message(STATUS ${HDF5_C_LIBRARies})
-#message(STATUS ${HDF5_CXX_LIBRARies})
-
 find_library(HDF5_LIBRARY1 NAMES hdf5 PATH_SUFFIXES hdf5)
 find_library(HDF5_LIBRARY2 NAMES hdf5_cpp PATH_SUFFIXES hdf5)
 find_file(H5cpp H5Cpp.h PATH_SUFFIXES cpp)
@@ -43,7 +36,5 @@ target_link_libraries(HDFextractor ${Boost_LIBRARIES})
 target_link_libraries(HDFextractor ${ZLIB_LIBRARY})
 target_link_libraries(HDFextractor ${HDF5_LIBRARY1})
 target_link_libraries(HDFextractor ${HDF5_LIBRARY2})
-
-# SET(CMAKE_VERBOSE_MAKEFILE ON)
 
 install (TARGETS HDFextractor DESTINATION bin CONFIGURATIONS Release)

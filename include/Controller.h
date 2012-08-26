@@ -14,8 +14,9 @@
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 
-// disable gnuplot on windows
-#if !defined (__WIN32__)
+#ifdef _WIN32 // the libraries used by Windows do not have mathematical constants defined
+#define 	M_1_PI   0.31830988618379067154	/* 1/pi */
+#else // disable gnuplot on windows
 #include "gnuplot_cpp/gnuplot_i.h"
 #endif
 

@@ -42,7 +42,7 @@ string Config::getValue(const string& name) const {
   value_map::const_iterator it=values.find(name);
   if(it==values.end()) {
     cerr << "No such config option supplied: " << name << endl;
-    abort();
+    exit(1);
   }
   return it->second;
 };

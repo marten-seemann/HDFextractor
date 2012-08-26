@@ -39,7 +39,7 @@ Controller::Controller(int argc, const char * argv[]) {
   }
   
   if(vm.count("version")) {
-    cout << "HDFextractor, version 1.0" << endl;
+    cout << "HDFextractor, version 1.0.1" << endl;
     exit(1);
   }
     
@@ -77,7 +77,7 @@ void Controller::readConfigFile(const string filename) {
   if(run==1) doRun1();
   else if(run==2) doRun2();
   else {
-    abort();
+    exit(1);
   }
 };
 
@@ -123,9 +123,17 @@ void Controller::printInfos() const {
   double angle12 = acos((ubi[0][0]*ubi[1][0] + ubi[0][1]*ubi[1][1] + ubi[0][2]*ubi[1][2])/(len1*len2))*M_1_PI*180;
   double angle13 = acos((ubi[0][0]*ubi[2][0] + ubi[0][1]*ubi[2][1] + ubi[0][2]*ubi[2][2])/(len1*len3))*M_1_PI*180;
   double angle23= acos((ubi[1][0]*ubi[2][0] + ubi[1][1]*ubi[2][1] + ubi[1][2]*ubi[2][2])/(len2*len3))*M_1_PI*180;
-  cout << "Angle between Vector 1 and Vector 2: " << angle12 << "°" << endl;
-  cout << "Angle between Vector 1 and Vector 3: " << angle13 << "°" << endl;
-  cout << "Angle between Vector 2 and Vector 3: " << angle23 << "°" << endl;
+
+  // \370 is the degree sign. Thx to Windows we need to write it like this
+  string degreesign;
+#ifdef _WIN32
+  degreesign = "\370";
+#else
+  degreesign = "°";
+#endif
+  cout << "Angle between Vector 1 and Vector 2: " << angle12 << degreesign << endl;
+  cout << "Angle between Vector 1 and Vector 3: " << angle13 << degreesign << endl;
+  cout << "Angle between Vector 2 and Vector 3: " << angle23 << degreesign << endl;
 }
 
 void Controller::openHDF(const string filename) {
@@ -139,12 +147,12 @@ void Controller::createOutputDirs() {
   output_dirname=config->getValue("output");
   if(exists(output_dirname) && !is_directory(output_dirname)) {
     cerr << "Output file " << output_dirname << " exists, but is not a directory." << endl;
-    abort();
+    exit(1);
   }
   else if(!exists(output_dirname)) {
     if(!create_directory(output_dirname)) {
       cerr << "Could not create output directory " << output_dirname << endl;
-      abort();
+      exit(1);
     }
   }
   else cout << "Using existing directory " << output_dirname << " for output." << endl;
@@ -154,7 +162,7 @@ void Controller::createOutputDirs() {
     //if(exists(output_dirname+"/"+direction)) remove_all(output_dirname+"/"+direction);
     if(!exists(output_dirname+"/"+direction) && (!create_directory(output_dirname+"/"+direction) || direction.length()==0)) {
       cerr << "Could not create output directory " << output_dirname+"/"+direction << endl;
-      abort();
+      exit(1);
     }
     cout << "Saving into directory: " << output_dirname+"/"+direction << endl << endl;
   }
@@ -162,18 +170,18 @@ void Controller::createOutputDirs() {
     if(!exists(output_dirname+"/streaks")) {
       if(!create_directory(output_dirname+"/streaks")) {
         cerr << "Could not create output directory " << output_dirname+"/streaks" << endl;
-        abort();
+        exit(1);
       }
     }
     streak_dirname=output_dirname+"/streaks/"+config->getValue("streak_directory");
     if(exists(streak_dirname)) {
       cerr << "Streak output directory " << streak_dirname << " already exists. Please choose another one." << endl;
-      abort();
+      exit(1);
     }
     else {
       if(!create_directory(streak_dirname)) {
         cerr << "Could not create output directory " << streak_dirname << endl;
-        abort();
+        exit(1);
       }
     }
     
@@ -215,7 +223,7 @@ void Controller::doRun1() {
   }
   if(start_slice>=end_slice) {
     cerr << "Parameter slices_start must be smaller than the dimension of the HDF file." << endl;
-    abort();
+    exit(1);
   }
   
   cout << "Calculating slices." << endl;
@@ -223,7 +231,7 @@ void Controller::doRun1() {
   
   bool plot;
   // disable gnuplotting on windows, regardless of what the user specified in the config file
-#if defined (__WIN32__)
+#ifdef _WIN32
  plot = false;
 #else
   if(config->getValue("plot")!="0") plot=true;
@@ -255,7 +263,7 @@ void Controller::doRun2() {
       size_x=atof(config->getValue("size_x").c_str());
       if(x+size_x>dimensions[0]-2 || x-size_x<=2) {
         cerr << "The cylinder must completely lie inside the dimensions of the HDF file. Please check the parameters size_x and offset_x." << endl;
-        abort();
+        exit(1);
       }
     }
     if(direction!="y") {
@@ -263,7 +271,7 @@ void Controller::doRun2() {
       size_y=atof(config->getValue("size_y").c_str());
       if(y+size_y>dimensions[1]-2 || y-size_y<=2) {
         cerr << "The cylinder must completely lie inside the dimensions of the HDF file. Please check the parameters size_y and offset_y." << endl;
-        abort();
+        exit(1);
       }
     }
     if(direction!="z") {
@@ -271,7 +279,7 @@ void Controller::doRun2() {
       size_z=atof(config->getValue("size_z").c_str());
       if(z+size_z>dimensions[2]-2 || z-size_z<=2) {
         cerr << "The cylinder must completely lie inside the dimensions of the HDF file. Please check the parameters size_z and offset_z." << endl;
-        abort();
+        exit(1);
       }
     }
     
@@ -311,6 +319,7 @@ void Controller::doRun2() {
 };
 
 void Controller::plotSlice(const string datafile, const int number) const {
+#ifndef _WIN32
   string title, xlabel, ylabel;
   int xrange, yrange;
   if(direction=="x") {
@@ -335,7 +344,6 @@ void Controller::plotSlice(const string datafile, const int number) const {
     yrange=dimensions.at(1);
   }
   
-  
   Gnuplot::set_terminal_std("png");
   Gnuplot g1("lines");
   g1.cmd("set terminal png size 1500,1500 24");
@@ -349,6 +357,7 @@ void Controller::plotSlice(const string datafile, const int number) const {
   g1.cmd("set yrange [0:"+intToString(yrange)+"]");
   g1.cmd("set cbrange [0:"+config->getValue("cbrange")+"]");
   g1.cmd("splot '"+datafile+"' u 1:2:3 title ''");
+#endif
 };
 
 

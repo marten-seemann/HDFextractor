@@ -18,7 +18,7 @@ HDFCryst::HDFCryst(string filename) {
   }
   catch (FileIException error) {
     cerr << "File " << filename << " not found." << endl;
-    exit(1); //abort();
+    exit(1);
   }
   root = file.openGroup("/");
   readHDFHeader();
