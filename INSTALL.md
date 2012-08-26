@@ -1,4 +1,4 @@
-# On Linux
+# On Linux / Mac OS
 
 For compiling you need a C++ compiler (preferably the gcc), as well as the [boost libraries](http://www.boost.org). For graphical output [gnuplot](http://www.gnuplot.info) has to be installed.
 
@@ -20,12 +20,5 @@ Then run the following commands:
     sudo make install
 
 
-# On Windows XP (32 bit):
-not (yet) completely tested. Try on your on risk. You will save much time switching to a Linux system...
-
-* download CMake from [http://www.cmake.org/cmake/resources/software.html](http://www.hdfgroup.org/HDF5/release/obtain5.html)
-* install http://www.mingw.org/, enable C++, MSys Basic System and MinGW Developer Toolkit
-* add C:\MinGW\bin to the Path (Path, NOT PATH) variable, see [http://www.computerhope.com/issues/ch000549.htm](http://www.computerhope.com/issues/ch000549.htm)
-* boost???
-
-If you succeed in installing on Windows, please contact me. I will update the instructions here. Thank you!
+# On Windows
+Please download the pre-compiled binary in the Downloads section.

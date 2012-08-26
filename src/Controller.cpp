@@ -39,7 +39,7 @@ Controller::Controller(int argc, const char * argv[]) {
   }
   
   if(vm.count("version")) {
-    cout << "HDFextractor, version 0.1.0" << endl;
+    cout << "HDFextractor, version 1.0" << endl;
     exit(1);
   }
     

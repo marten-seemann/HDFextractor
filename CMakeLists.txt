@@ -7,18 +7,6 @@ include(CheckIncludeFile)
 set(BUILD_SHARED_LIBRARIES OFF)
 set(CMAKE_BUILD_TYPE "RELEASE")
 
-#if(CMAKE_COMPILER_IS_GNUCXX)
-#	list(APPEND CMAKE_CXX_FLAGS "-O2") ## Optimize
-#	list(APPEND CMAKE_EXE_LINKER_FLAGS -s)	 ## Strip binary
-#endif()
-
-if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	set(OS mac)
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-	set(OS linux)
-endif()
-message(STATUS "Dectected Operating System: "${OS})
-
 file(GLOB CPPS src/*.cpp src/*.c src/*.hpp extern/*.cpp extern/*/*.cpp)
 file(GLOB HEADERS include/*.h)
 

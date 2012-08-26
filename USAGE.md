@@ -4,10 +4,10 @@ In the following it is assumed that the file name of the HDF file is *example.hd
 
 ## Obtain general information about the DHF file
 
-Print general information, such as the resolution (NP value) or the UBI matrix.
+Print general information, such as the resolution (NP value), the UBI matrix and the lengths of the vectors spanning the unit cell in the reciprocal space.
 
 	HDFextractor --show-info --hdf example.hdf
-	
+
 ## Start Run 1
 An example configuration file is provided in the folder examples/. For further explaination see there.
 
