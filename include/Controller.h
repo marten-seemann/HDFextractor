@@ -68,31 +68,46 @@ private:
     * @param filename the path to the config file
    */
   void readConfigFile(const std::string filename);
+  
   /// show general information about the hdf file
   /** prints dimension, the UBI matrix as well as the NP (number of points) value
    *  data is read from the header of the HDF file
    */
   void printInfos() const;
+  
   /// open a HDF file
   /** calls the class %HDFCryst for opening the specified HDF file
    * @param filename the path to the HDF file
    */
   void openHDF(const std::string filename);
+  
   /// create the output directories
   /** create the whole output directory structure. This structure depends on the value of #run (and the value of #direction) */
   void createOutputDirs();
+  
   /// get the #dir_index from the string @a x, @a y or @a z
   void getDirection();
+  
   /// perform run 1 (extraction of the layers)
   void doRun1();
+  
   /// perform run 2 (extraction of the streaks)
   void doRun2();
+  
+  /// save a layer of the HDF to a file
+  /**
+   * @param filename the name of the output file
+   * @param number the coordinate specified by orientation
+   */
+  void saveSlice(const std::string filename, const int number) const;
+  
   /// plot a slice to a .png file
   /** calls Gnuplot to plot a data file and saves it as a .png file to the output directory
    *  @param datafile the file containing the data which should be plotted
    *  @param number the number of the slice that is plotted in the specified direction. will only be used in the plot title
    */
   void plotSlice(const std::string datafile, const int number) const;
+  
   /// assemble the filename of the logfile
   /** The log file will be saved to the output directory.
    *  @param prefix a prefix for the file name

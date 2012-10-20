@@ -39,7 +39,7 @@ Controller::Controller(int argc, const char * argv[]) {
   }
   
   if(vm.count("version")) {
-    cout << "HDFextractor, version 1.0.1" << endl;
+    cout << "HDFextractor, version 1.1" << endl;
     exit(1);
   }
     
@@ -241,7 +241,7 @@ void Controller::doRun1() {
   for(int i=start_slice; i<end_slice; i++) {
     cout << "Saving slice " << (i+1) << " / " << dimensions.at(dir_index) << endl;
     string filename = output_dir+"/slice" + to_string(i) + ".dat";
-    hdf->saveLayer(filename, dir_index, i);
+    saveSlice(filename, i);
     if(plot) {
 	  cout << "Plotting slice " << (i+1) << "..." << endl;
       plotSlice(filename, i);
@@ -298,6 +298,7 @@ void Controller::doRun2() {
     
   string filename = streak_dirname + "/streak.txt";
   Output out(filename);
+  out << "# coord signal monitor\n";
   for(int i=0; i<row.at(0).size(); i++) {
     out << i;
     out << " ";
@@ -308,6 +309,35 @@ void Controller::doRun2() {
   }
   
   return;
+};
+
+void Controller::saveSlice(const string filename, const int number) const {
+  layerdata signal = hdf->getLayer("signal", dir_index, number);
+  layerdata monitor = hdf->getLayer("monitor", dir_index, number);
+  
+  Output file(filename);
+  
+  string caption = "# ";
+  if(direction == "x") caption += "y z";
+  else if(direction == "y") caption += "z x";
+  else if(direction == "z") caption += "x y";
+  caption += " signal monitor\n";
+  file << caption;
+  for(int i=0; i<signal.size(); i++) {
+    layerdata_row signal2 = signal.at(i);
+    layerdata_row monitor2 = monitor.at(i);
+    for(int j=0; j<signal2.size(); j++) {
+      file << j;
+      file << " ";
+      file << i;
+      file << " ";
+      file << signal2.at(j);
+      file << " ";
+      file << monitor2.at(j);
+      file << "\n";
+    }
+    file << "\n";
+  }
 };
 
 void Controller::plotSlice(const string datafile, const int number) const {

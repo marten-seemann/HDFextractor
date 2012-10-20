@@ -75,13 +75,6 @@ public:
    */
   std::vector<layerdata_row> getCylinderRow(const unsigned short orientation, const int coord1, const int coord2, const double site_a, const double site_b) const;
   
-  /// save a layer of the HDF to a file
-  /**
-   * @param filename the name of the output file
-   * @param orientation the surface normal to the layer to be read. Possible values: 0 = x => read the yz-plane, 1 = y => read the xz-plane, 2 = z => read the xy-plane
-   * @param number the coordinate specified by orientation
-   */
-  void saveLayer(const std::string filename, const unsigned short orientation, const int number) const;
   
   /// get the size of the reciprocal space in pixels
   /**

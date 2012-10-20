@@ -105,30 +105,6 @@ int HDFCryst::getNP() const {
 };
 
 
-void HDFCryst::saveLayer(const string filename, const unsigned short orientation, const int number) const {
-  layerdata signal = getLayer("signal", orientation, number);
-  layerdata monitor = getLayer("monitor", orientation, number);
-  
-  Output file(filename);
-  file << "#x y signal monitor\n";
-  for(int i=0; i<signal.size(); i++) {
-    layerdata_row signal2 = signal.at(i);
-    layerdata_row monitor2 = monitor.at(i);
-    for(int j=0; j<signal2.size(); j++) {
-      file << j;
-      file << " ";
-      file << i;
-      file << " ";
-      file << signal2.at(j);
-      file << " ";
-      file << monitor2.at(j);
-      file << "\n";
-    }
-    file << "\n";
-  }
-};
-
-
 /// @todo: return reference or pointer... gives 5% performance increase!
 layerdata HDFCryst::getLayer(const string dataset_name, const unsigned short orientation, const int number) const {
   if(orientation>2) {
