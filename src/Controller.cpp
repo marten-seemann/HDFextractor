@@ -253,13 +253,16 @@ void Controller::doRun2() {
   // copy the config file  
   boost::filesystem::copy_file(config->getFilename(), streak_dirname + "/" + getLogFileName("config", "log"));
 
-  layerdata_row row;
+  vector<layerdata_row> row;
+  
+  int x, y, z;
+  if(direction != "x") x = atoi(config->getValue("offset_x").c_str());
+  if(direction != "y") y = atoi(config->getValue("offset_y").c_str());
+  if(direction != "z") z = atoi(config->getValue("offset_z").c_str());
 
   if(config->getValue("mode") == "cylinder") {
     double size_x, size_y, size_z;
-    int x, y, z;
     if(direction != "x") {
-      x = atoi(config->getValue("offset_x").c_str());
       size_x = atof(config->getValue("size_x").c_str());
       if(x+size_x > dimensions[0]-2 || x-size_x <= 2) {
         cerr << "The cylinder must completely lie inside the dimensions of the HDF file. Please check the parameters size_x and offset_x." << endl;
@@ -267,7 +270,6 @@ void Controller::doRun2() {
       }
     }
     if(direction != "y") {
-      y = atoi(config->getValue("offset_y").c_str());
       size_y = atof(config->getValue("size_y").c_str());
       if(y+size_y > dimensions[1]-2 || y-size_y <= 2) {
         cerr << "The cylinder must completely lie inside the dimensions of the HDF file. Please check the parameters size_y and offset_y." << endl;
@@ -275,7 +277,6 @@ void Controller::doRun2() {
       }
     }
     if(direction != "z") {
-      z = atoi(config->getValue("offset_z").c_str());
       size_z = atof(config->getValue("size_z").c_str());
       if(z+size_z > dimensions[2]-2 || z-size_z <= 2) {
         cerr << "The cylinder must completely lie inside the dimensions of the HDF file. Please check the parameters size_z and offset_z." << endl;
@@ -288,17 +289,6 @@ void Controller::doRun2() {
     else if(direction == "z") row = hdf->getCylinderRow(2, x, y, size_x, size_y);
   }
   else if(config->getValue("mode") == "single") {
-    int x, y, z;
-    if(direction != "x") {
-      x = atoi(config->getValue("offset_x").c_str());
-    }
-    if(direction != "y") {
-      y = atoi(config->getValue("offset_y").c_str());
-    }
-    if(direction != "z") {
-      z = atoi(config->getValue("offset_z").c_str());
-    }
-    
     if(direction == "x") row = hdf->getRow(0, y, z);
     else if(direction == "y") row = hdf->getRow(1, z, x);
     else if(direction == "z") row = hdf->getRow(2, x, y);
@@ -308,10 +298,12 @@ void Controller::doRun2() {
     
   string filename = streak_dirname + "/streak.txt";
   Output out(filename);
-  for(int i=0; i<row.size(); i++) {
+  for(int i=0; i<row.at(0).size(); i++) {
     out << i;
     out << " ";
-    out << row.at(i);
+    out << row.at(0).at(i);
+    out << " ";
+    out << row.at(1).at(i);
     out << "\n";
   }
   

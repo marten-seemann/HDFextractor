@@ -105,7 +105,6 @@ int HDFCryst::getNP() const {
 };
 
 
-
 void HDFCryst::saveLayer(const string filename, const unsigned short orientation, const int number) const {
   layerdata signal = getLayer("signal", orientation, number);
   layerdata monitor = getLayer("monitor", orientation, number);
@@ -168,9 +167,19 @@ layerdata HDFCryst::getLayer(const string dataset_name, const unsigned short ori
 };
 
 
-layerdata_row HDFCryst::getRow(const unsigned short orientation, const int coord1, const int coord2) const {
+vector<layerdata_row> HDFCryst::getRow(const unsigned short orientation, const int coord1, const int coord2) const {
+  vector<layerdata_row> res;
+  cout << "Extracting from dataset: signal" << endl;
+  res.push_back( getRowData("signal", orientation, coord1, coord2) );
+  cout << "Extracting from dataset: monitor" << endl;
+  res.push_back( getRowData("monitor", orientation, coord1, coord2) );
+  return res;
+}
+
+
+layerdata_row HDFCryst::getRowData(const string dataset_name, const unsigned short orientation, const int coord1, const int coord2) const {
   layerdata_row values;
-  DataSet dataset = file.openDataSet( "signal" );
+  DataSet dataset = file.openDataSet( dataset_name );
   DataSpace filespace = dataset.getSpace();
   
   float* column = new float[dims[orientation]];
@@ -196,10 +205,20 @@ layerdata_row HDFCryst::getRow(const unsigned short orientation, const int coord
   return values;
 };
 
-layerdata_row HDFCryst::getCylinderRow(const unsigned short orientation, const int coord1, const int coord2, const double site_a, const double site_b) const {
+
+vector<layerdata_row> HDFCryst::getCylinderRow(const unsigned short orientation, const int coord1, const int coord2, const double site_a, const double site_b) const {
+  vector<layerdata_row> res;
+  cout << "Extracting from dataset: signal" << endl;
+  res.push_back( getCylinderRowData("signal", orientation, coord1, coord2, site_a, site_b) );
+  cout << "Extracting from dataset: monitor" << endl;
+  res.push_back( getCylinderRowData("monitor", orientation, coord1, coord2, site_a, site_b) );
+  return res;
+}
+
+layerdata_row HDFCryst::getCylinderRowData(const string dataset_name, const unsigned short orientation, const int coord1, const int coord2, const double site_a, const double site_b) const {
   layerdata_row result;
   Ellipse circ(0, 0, site_a, site_b);
-  cout << "Ellipse with " << site_a << " x " << site_b << endl;
+  //  cout << "Ellipse with " << site_a << " x " << site_b << endl;
 
   int min_j = floor(-site_a - 1);
   int max_j = ceil(site_a + 1);
@@ -218,12 +237,12 @@ layerdata_row HDFCryst::getCylinderRow(const unsigned short orientation, const i
   vector<layerdata_row> columns;
   for(int j=min_j; j<max_j; j++) {
     for(int k=min_k; k<max_k; k++) {
-      columns.push_back(getRow(orientation, coord1+j, coord2+k));
+      columns.push_back(getRowData(dataset_name, orientation, coord1+j, coord2+k));
     }
   }
   
   for(int i=0; i<dims[orientation]; i++) {
-    unsigned long sum=0;
+    long double sum = 0;
     for(int j=0; j<columns.size(); j++) {
       sum += fields.at(j)*columns.at(j).at(i);
     }

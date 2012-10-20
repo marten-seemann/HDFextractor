@@ -23,37 +23,83 @@
 
 class HDFCryst {
 private:
+  /// the filename of the HDF file
   std::string filename;
   H5::H5File file;
   H5::Group root;
+  /// the number of pixels in the directions x, y and z
   int dims[3];
+  /// the np value that was used by rsv_mapper.py to generate this HDF file
   int np;
   int intensity_complete; //-1 if not yet calculated
   /// the UBI matrix
   std::vector< std::vector<double> > ubi;
   //double ub[3][3];
-
+  
 public:  
   /// constructor
-  /// @param filename the path to the HDF file
+  /**
+   * @param filename the path to the HDF file
+   */
   explicit HDFCryst(std::string filename);
+  
   /// destructor
   ~HDFCryst();
+  
   /// get a whole layer from the hdf file
-  /// @param dataset_name the name of the dataset, either "monitor" or "signal"
-  /// @param orientation the surface normal to the layer to be read. Possible values: 0 = x => read the yz-plane, 1 = y => read the xz-plane, 2 = z => read the xy-plane
-  /// @param number the coordinate specified by orientation
-  /// @return the layer
+  /**
+  * @param dataset_name the name of the dataset, either "monitor" or "signal"
+  * @param orientation the surface normal to the layer to be read. Possible values: 0 = x => read the yz-plane, 1 = y => read the xz-plane, 2 = z => read the xy-plane
+  * @param number the coordinate specified by orientation
+  * @return the layer 
+   */
   layerdata getLayer(const std::string dataset_name, const unsigned short orientation, const int number) const;
-  layerdata_row getRow(const unsigned short orientation, const int coord1, const int coord2) const;
-  layerdata_row getCylinderRow(const unsigned short orientation, const int coord1, const int coord2, const double site_a, const double site_b) const;
+  
+  /// get the intensities along a line, from both monitor and signal
+  /**
+   * @param orientation the direction of the line: x, y or z
+   * @param coord1 first coordinate offset
+   * @param coord2 second coordinate offset
+   * @return the intensities along the specified line. First entry in the vector comes from the signal dataset, the second one from the monitor
+   */
+  std::vector<layerdata_row> getRow(const unsigned short orientation, const int coord1, const int coord2) const;
+  
+  /// get the intensities inside a cylinder, from both monitor and signal
+  /**
+   * @param orientation the direction of the line: x, y or z
+   * @param coord1 first coordinate offset
+   * @param coord2 second coordinate offset
+   * @param site_a first semi-axis of the cylinder
+   * @param site_b second semi-axis of the cylinder
+   * @return the intensities inside the specified cylinder. First entry in the vector comes from the signal dataset, the second one from the monitor
+   */
+  std::vector<layerdata_row> getCylinderRow(const unsigned short orientation, const int coord1, const int coord2, const double site_a, const double site_b) const;
+  
+  /// save a layer of the HDF to a file
+  /**
+   * @param filename the name of the output file
+   * @param orientation the surface normal to the layer to be read. Possible values: 0 = x => read the yz-plane, 1 = y => read the xz-plane, 2 = z => read the xy-plane
+   * @param number the coordinate specified by orientation
+   */
   void saveLayer(const std::string filename, const unsigned short orientation, const int number) const;
+  
+  /// get the size of the reciprocal space in pixels
+  /**
+   * @return the number of pixels in x, y and z direction
+   */
   std::vector<int> getDimensions() const;
+  
   /// return the UBI matrix read from the header of the HDF file
-  /** @return the UBI matrix as a two-dimensional vector (3x3)   */
+  /** 
+   * @return the UBI matrix as a two-dimensional vector (3x3)   
+   */
   std::vector< std::vector<double> > getUbi() const;
-  /// get the number of points used for creating this HDF file. This is the same value as the number of points specified for the rsv_mapper.py script.
-  /// @return the number of points
+  
+  /// get the number of points used for creating this HDF file
+  /**
+   * This is the same value as the number of points specified for the rsv_mapper.py script.
+   * @return the number of points
+   */
   int getNP() const;
   
 private:
@@ -65,6 +111,23 @@ private:
   void readNP();
   /// read the dimensions of the reciprocal space encoded in the HDF file
   void readDimensions();
+
+  
+//  * @param dataset_name the name of the dataset, either "monitor" or "signal"
+
+  /// get the intensities along a line, from monitor or from signal
+  /**
+   * @copydetails HDFCryst::getRow()
+   * @param dataset_name the name of the dataset, either "monitor" or "signal"
+   */
+  layerdata_row getRowData(const std::string dataset_name, const unsigned short orientation, const int coord1, const int coord2) const;
+  
+  /// get the intensities inside a cylinder, from monitor or from signal
+  /**
+   * @copydetails HDFCryst::getCylinderRow()
+   * @param dataset_name the name of the dataset, either "monitor" or "signal"
+   */
+  layerdata_row getCylinderRowData(const std::string dataset_name, const unsigned short orientation, const int coord1, const int coord2, const double site_a, const double site_b) const;
 };
 
 #endif

@@ -7,7 +7,7 @@
 #include <string>
 
 
-typedef std::vector<long> layerdata_row;
+typedef std::vector<long double> layerdata_row;
 typedef std::vector<layerdata_row> layerdata;
 
 /// remove whitespace from the beginning of a string
