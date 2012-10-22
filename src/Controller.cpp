@@ -39,7 +39,7 @@ Controller::Controller(int argc, const char * argv[]) {
   }
   
   if(vm.count("version")) {
-    cout << "HDFextractor, version 1.1" << endl;
+    cout << "HDFextractor, version 1.1.1" << endl;
     exit(1);
   }
     
@@ -210,8 +210,8 @@ void Controller::doRun1() {
   int start_slice, end_slice;
   if(config->getValue("slices_start") == "center") {
     int num = atoi(config->getValue("slices_number").c_str());
-    start_slice = floor(static_cast<double>(dimensions.at(dir_index)/2-num/2));
-    end_slice = ceil(static_cast<double>(dimensions.at(dir_index)/2+num/2));
+    start_slice = floor(static_cast<double>(dimensions.at(dir_index)/2-num/2)) + 1;
+    end_slice = ceil(static_cast<double>(dimensions.at(dir_index)/2+num/2)) + 1;
   }
   else if(config->getValue("slices_start") == "all") {
     start_slice = 1;
@@ -219,7 +219,7 @@ void Controller::doRun1() {
   }
   else {
     start_slice = max(1, atoi(config->getValue("slices_start").c_str()));
-    end_slice = min(start_slice+atoi(config->getValue("slices_number").c_str()), dimensions[dir_index]);
+    end_slice = min(start_slice + atoi(config->getValue("slices_number").c_str()), dimensions[dir_index]) -1;
   }
   if(start_slice >= end_slice) {
     cerr << "Parameter slices_start must be smaller than the dimension of the HDF file." << endl;
@@ -238,13 +238,13 @@ void Controller::doRun1() {
   else plot=false;
 #endif
   
-  for(int i=start_slice; i<end_slice; i++) {
-    cout << "Saving slice " << (i+1) << " / " << dimensions.at(dir_index) << endl;
+  for(int i=start_slice; i<=end_slice; i++) {
+    cout << "Saving slice " << i << " / " << dimensions.at(dir_index) << endl;
     string filename = output_dir+"/slice" + to_string(i) + ".dat";
-    saveSlice(filename, i);
+    saveSlice(filename, i-1);
     if(plot) {
-	  cout << "Plotting slice " << (i+1) << "..." << endl;
-      plotSlice(filename, i);
+	  cout << "Plotting slice " << i << "..." << endl;
+      plotSlice(filename, i-1);
     }
   }
 };
